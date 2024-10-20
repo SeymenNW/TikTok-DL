@@ -41,7 +41,7 @@ namespace TikTok_DL.ViewModels
         private string x => tikTokVideo.DownloadUrl;
 
         [ObservableProperty]
-        public string videoUrl = "https://www.tiktok.com/@tridzoid/video/7414578349164580138";
+        public string videoUrl; //= "https://www.tiktok.com/@tridzoid/video/7414578349164580138"; (Example)
 
         #endregion
 
