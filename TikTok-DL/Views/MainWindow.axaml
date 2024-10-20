@@ -6,15 +6,178 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TikTok_DL.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+	    xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+		xmlns:material="using:Material.Icons.Avalonia"
         Icon="/Assets/avalonia-logo.ico"
-        Title="TikTok_DL">
+        Title="TikTok Downloader v1.0 (TTDL1.0)"
+		Background="#171717"
+		Height="675"
+		Width="800"
+		
+		>
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	<!--<Window.DataContext>
+		<vm:MainWindowViewModel/>
+	</Window.DataContext>-->
+
+
+
+
+	<Grid RowDefinitions="Auto, *, 50" >
+
+		<!--Top Part-->
+		<Grid Grid.Row="0" RowDefinitions="Auto,*"  >
+			<StackPanel Grid.Row="0" Margin="10" Spacing="10" >
+				<Label HorizontalAlignment="Center" Foreground="White">TikTok Downloader (STTDL 1.0)</Label>
+				<Grid>
+					<TextBox Background="#282828" Foreground="White" CornerRadius="40" BorderBrush="#595959" Text="{Binding VideoUrl, Mode=TwoWay}" VerticalContentAlignment="Center" FontSize="20" Watermark="TikTok Url goes here" >
+						<TextBox.Styles>
+							<Style Selector="TextBox:pointerover /template/ ContentPresenter">
+								<Setter Property="Background" Value="#2f2f2f"/>
+							</Style>
+						</TextBox.Styles>
+					</TextBox>
+					<Button Command="{Binding LoadMetadataCommand}" Background="Transparent"  HorizontalAlignment="Right">
+						<Button.Styles>
+							<Style Selector="Button:pointerover /template/ ContentPresenter">
+								<Setter Property="Background" Value="Transparent"/>
+								<Setter Property="Foreground" Value="#0d6efd"/>
+							</Style>
+						</Button.Styles>
+
+						<material:MaterialIcon ToolTip.Tip="Click to get metadata of the video..." Width="50" Height="50" Kind="ArrowRight"/>
+					</Button>
+				</Grid>
+
+			</StackPanel>
+
+		</Grid>
+
+		<Grid Grid.Row="1" RowDefinitions="*" HorizontalAlignment="Stretch" >
+
+
+			<!--Before any Load Action.-->
+
+			<Border IsVisible="{Binding !HasLoaded}" Background="#282828"  MaxHeight="200" Height="200" HorizontalAlignment="" Grid.Row="0" CornerRadius="20" Margin="20"  VerticalAlignment="Top">
+				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+					<Label FontSize="35" HorizontalAlignment="Center" FontWeight="Bold">Enter a link to get started </Label>
+					<Label FontSize="19" HorizontalAlignment="Center" FontWeight="Bold">Awaiting video link...</Label>
+				</StackPanel>
+			</Border>
+
+
+			<!--While Loading TikTok Video Info-->
+
+			<Border  IsVisible="{Binding IsLoading}"  MaxHeight="500" Height="500" Grid.Row="0" CornerRadius="7" Margin="20"  Background="#1c1c1c" VerticalAlignment="Top">
+				<StackPanel  HorizontalAlignment="Center" VerticalAlignment="Center">
+					<Label HorizontalAlignment="Center">Loading TikTok Video 📽️🌩️</Label>
+					<ProgressBar Foreground="#a25bf5" CornerRadius="20" HorizontalAlignment="Center" Width="300" Height="25" IsIndeterminate="True"/>
+					<Label HorizontalAlignment="Center" Content="{Binding LoadTimer1}"></Label>
+
+				</StackPanel>
+
+			</Border>
+
+			<!--TikTok Video Info   -->
+			<Grid IsVisible="{Binding HasLoaded}"  ColumnDefinitions="250,*" RowDefinitions="Auto,*" Margin="20">
+				<Border MaxHeight="360" Height="360" Width="240" VerticalAlignment="Top"  CornerRadius="7" ClipToBounds="True" >
+					<Image Stretch="UniformToFill"  HorizontalAlignment="Right"  Grid.Column="0"  asyncImageLoader:ImageLoader.Source="{Binding TikTokVideo.CoverImage}"/>
+				</Border>
+				<Border Grid.Column="1" Margin="10,0,0,0" Background="#282828" CornerRadius="20" ClipToBounds="True" >
+					<Grid Margin="10" RowDefinitions="Auto,*,50">
+						<ScrollViewer Height="70">
+							<StackPanel Grid.Row="0" Spacing="5"   >
+
+
+								<TextBlock TextWrapping="Wrap" Foreground="White" FontWeight="SemiBold" FontSize="20" Text="{Binding TikTokVideo.TitleAndTags}" />
+
+
+
+							</StackPanel>
+						</ScrollViewer>
+						<StackPanel Grid.Row="1" Spacing="5" Margin="0,10,0,0">
+							<Separator Background="White"/>
+
+							<Label Content="{Binding TikTokVideo.FileSize}"></Label>
+							<Label Content="{Binding TikTokVideo.UploadDate}"></Label>
+							<Label Content="{Binding TikTokVideo.UploadedDays}"></Label>
+							<Label Foreground="White" FontWeight="SemiBold" FontSize="16" Content="{Binding TikTokVideo.Duration}" />
+
+							<!--<vlc:VideoView  MediaPlayer="{Binding MediaPlayer}"/>-->
+
+							<!--<Button Grid.Row="2" IsEnabled="{Binding TikTokVideo.HasDataLoaded}"> Open in TikTok</Button>
+								<Button Grid.Row="2" >Open Watermark-Free</Button>-->
+
+
+						</StackPanel>
+						<StackPanel Grid.Row="2" Orientation="Horizontal">
+							<Border Background="#383838" CornerRadius="20" ClipToBounds="True" >
+								<Image Stretch="Fill"  HorizontalAlignment="Right"  Grid.Column="0"  asyncImageLoader:ImageLoader.Source="{Binding TikTokVideo.AuthorImage}"/>
+							</Border>
+
+
+							<Label VerticalAlignment="Center" Content="{Binding TikTokVideo.Author}"/>
+							<!--<Button>Profile</Button>-->
+						</StackPanel>
+					</Grid>
+				</Border>
+
+				<Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" >
+					<Grid.Styles>
+						<Style Selector="Button">
+							<Setter Property="Background" Value="#a25bf5"/>
+							<Setter Property="Foreground" Value="#fef3f4"/>
+							<Setter Property="FontSize" Value="16"/>
+							<Setter Property="Width" Value="200"/>
+							<Setter Property="HorizontalContentAlignment" Value="Center"/>
+							<Setter Property="FontWeight" Value="SemiBold"/>
+							<Setter Property="CornerRadius" Value="14"/>
+							<Setter Property="Padding" Value="10"/>
+						</Style>
+
+						<Style Selector="Button:pointerover /template/ ContentPresenter">
+							<Setter Property="Background" Value="#8048c2"/>
+							<Setter Property="Foreground" Value="#fef3f4"/>
+
+
+						</Style>
+					</Grid.Styles>
+					<StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="20" Spacing="20" HorizontalAlignment="Center">
+
+
+						<Button IsEnabled="{Binding TikTokVideo.HasDataLoaded}" ToolTip.Tip="Downloads the TikTok video in the best possible quality without watermarks." Click="DownloadVideo_Click">
+							<StackPanel Orientation="Horizontal">
+								<material:MaterialIcon Kind="Download"/>
+								<Label Content="Download Video"/>
+							</StackPanel>
+						</Button>
+
+						<Button IsEnabled="{Binding TikTokVideo.HasDataLoaded}" ToolTip.Tip="Opens the video in TikTok (Default Browser)" Command="{Binding OpenInTikTokCommand}">
+							<StackPanel Orientation="Horizontal">
+								<material:MaterialIcon Kind="OpenInApp"/>
+								<Label Content="Open in TikTok"/>
+							</StackPanel>
+						</Button>
+						<Button IsEnabled="{Binding TikTokVideo.HasDataLoaded}" ToolTip.Tip="Exports the Video link, TikTok link, cover images link and relevant data in JSON format." Click="DownloadVideo_Click">
+							<StackPanel Orientation="Horizontal">
+								<material:MaterialIcon Kind="File"/>
+								<Label Content="Export JSON"/>
+							</StackPanel>
+						</Button>
+					</StackPanel>
+
+				</Grid>
+
+
+			</Grid>
+
+
+			<!--YouTube Download Options & Downloading-->
+
+
+		</Grid>
+
+	</Grid>
 
 </Window>

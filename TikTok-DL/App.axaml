@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="TikTok_DL.App"
              xmlns:local="using:TikTok_DL"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
@@ -11,5 +12,7 @@
   
     <Application.Styles>
         <FluentTheme />
-    </Application.Styles>
+		<materialIcons:MaterialIconStyles />
+
+	</Application.Styles>
 </Application>
