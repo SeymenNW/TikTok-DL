@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace TikTok_DL.ViewModels
+namespace TikTokDL.ViewModels
 {
     public class ViewModelBase : ObservableObject
     {

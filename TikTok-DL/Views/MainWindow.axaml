@@ -1,15 +1,18 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:TikTok_DL.ViewModels"
+        xmlns:vm="using:TikTokDL.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="TikTok_DL.Views.MainWindow"
+	    xmlns:converters="using:TikTokDL.Views.Converters"
+
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="TikTokDL.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
 	    xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
 		xmlns:material="using:Material.Icons.Avalonia"
         Icon="/Assets/avalonia-logo.ico"
         Title="TikTok Downloader v1.0 (TTDL1.0)"
+		
 		Background="#171717"
 		Height="675"
 		Width="800"
@@ -21,15 +24,23 @@
 		<vm:MainWindowViewModel/>
 	</Window.DataContext>-->
 
-
+	<Window.Resources>
+		<converters:TrueFalseColorConverter x:Key="trueFalseConverter"/>
+		<converters:TrueFalseTextConverter x:Key="trueFalseTextConverter"/>
+	</Window.Resources>
 
 
 	<Grid RowDefinitions="Auto, *, 50" >
 
 		<!--Top Part-->
 		<Grid Grid.Row="0" RowDefinitions="Auto,*"  >
-			<StackPanel Grid.Row="0" Margin="10" Spacing="10" >
-				<Label HorizontalAlignment="Center" Foreground="White">TikTok Downloader (STTDL 1.0)</Label>
+			<Grid Grid.Row="0" ColumnDefinitions="200,*,200">
+				<Label Foreground="White" Background="{Binding IsValidUrl, Converter={StaticResource ResourceKey=trueFalseConverter}}" Content="{Binding IsValidUrl, Converter={StaticResource ResourceKey=trueFalseTextConverter}}"></Label>
+				<Label Grid.Column="1" HorizontalAlignment="Center" Foreground="White">TikTok Downloader (STTDL 1.0)</Label>
+
+			</Grid>
+			
+			<StackPanel Grid.Row="1" Margin="10" Spacing="10" >
 				<Grid>
 					<TextBox Background="#282828" Foreground="White" CornerRadius="40" BorderBrush="#595959" Text="{Binding VideoUrl, Mode=TwoWay}" VerticalContentAlignment="Center" FontSize="20" Watermark="TikTok Url goes here" >
 						<TextBox.Styles>

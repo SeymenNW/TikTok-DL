@@ -5,11 +5,11 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using TikTok_DL.ViewModels;
-using TikTok_DL.Views;
+using TikTokDL.ViewModels;
+using TikTokDL.Views;
 using TikTokDL.Services;
 
-namespace TikTok_DL
+namespace TikTokDL
 {
     public partial class App : Application
     {

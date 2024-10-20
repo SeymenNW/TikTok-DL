@@ -1,10 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
-using TikTok_DL.ViewModels;
+using TikTokDL.ViewModels;
 using TikTokDL.Handlers;
 
-namespace TikTok_DL.Views
+namespace TikTokDL.Views
 {
     public partial class MainWindow : Window
     {

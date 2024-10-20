@@ -5,8 +5,9 @@ using System;
 using TikTokDL.Models;
 using TikTokDL.Handlers;
 using TikTokDL.Services;
+using Newtonsoft.Json.Linq;
 
-namespace TikTok_DL.ViewModels
+namespace TikTokDL.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
@@ -43,39 +44,55 @@ namespace TikTok_DL.ViewModels
         [ObservableProperty]
         public string videoUrl; //= "https://www.tiktok.com/@tridzoid/video/7414578349164580138"; (Example)
 
+        [ObservableProperty]
+        public bool isValidUrl;
+
         #endregion
 
         #region Commands
 
+        partial void OnVideoUrlChanged(string value)
+        {
+          IsValidUrl = TikTokValidators.ValidateUrl(VideoUrl);
+        }
 
 
         [RelayCommand]
         public async Task LoadMetadata()
         {
-
-            //This only represents the expected load time, and if u have slow internet it will eventually pass 100% lol.
-            //However the API response gets slower the more you request it within a timeframe of 30-60 seconds.
-            ProgressCount = 0;
-            var timer = new System.Timers.Timer
+            if (!VideoUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+               !VideoUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
-                Interval = 60,
-                Enabled = true,
-                AutoReset = true,
-
-            }; timer.Elapsed += LoadTimer;
-
-
-            TikTokVideo = null;
-            while (TikTokVideo == null)
-            {
-                IsLoading = true;
-                HasLoaded = false;
-                TikTokVideo = await _tikTokService.GetMedia(VideoUrl);
-                IsLoading = false;
-                HasLoaded = true;
+                VideoUrl = "https://" + VideoUrl;
             }
+            if (TikTokValidators.ValidateUrl(VideoUrl))
+            {
 
 
+                //This only represents the expected load time, and if u have slow internet it will eventually pass 100% lol.
+                //However the API response gets slower the more you request it within a timeframe of 30-60 seconds.
+                ProgressCount = 0;
+                var timer = new System.Timers.Timer
+                {
+                    Interval = 60,
+                    Enabled = true,
+                    AutoReset = true,
+
+                }; timer.Elapsed += LoadTimer;
+
+
+                TikTokVideo = null;
+                while (TikTokVideo == null)
+                {
+                    IsLoading = true;
+                    HasLoaded = false;
+                    TikTokVideo = await _tikTokService.GetTikTokMedia(VideoUrl);
+                    IsLoading = false;
+                    HasLoaded = true;
+                }
+
+
+            }
         }
 
         private static int ProgressCount = 0;

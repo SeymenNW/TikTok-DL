@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using System;
-using TikTok_DL.ViewModels;
+using TikTokDL.ViewModels;
 
-namespace TikTok_DL
+namespace TikTokDL
 {
     public class ViewLocator : IDataTemplate
     {
